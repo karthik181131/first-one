@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game - Karthik's Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #181A20;
+            color: #E0E1E6;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .memory-game-container {
+            margin: 48px auto 0 auto;
+            background: #23272F;
+            border-radius: 18px;
+            box-shadow: 0 2px 16px rgba(65,105,225,0.10);
+            padding: 32px 20px 24px 20px;
+            max-width: 400px;
+            width: 98vw;
+            position: relative;
+            z-index: 1;
+        }
+        .memory-game-title {
+            color: #4169E1;
+            text-align: center;
+            margin-bottom: 18px;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        #memory-game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 56px);
+            gap: 14px;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .memory-card {
+            width: 56px;
+            height: 56px;
+            background: #181A20;
+            border: 2px solid #4169E1;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.1rem;
+            color: #4169E1;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .memory-card.flipped, .memory-card.matched {
+            background: #4169E1;
+            color: #fff;
+            border-color: #fff;
+            cursor: default;
+        }
+        .memory-card.matched {
+            opacity: 0.7;
+        }
+        #memory-game-status {
+            text-align: center;
+            color: #E0E1E6;
+            margin-top: 16px;
+            font-size: 1.08rem;
+            min-height: 24px;
+        }
+        #memory-game-restart {
+            display: block;
+            margin: 18px auto 0 auto;
+            background: #4169E1;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            padding: 10px 28px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(65,105,225,0.10);
+        }
+        #memory-game-restart:hover {
+            background: #2746a8;
+        }
+        .back-btn {
+            display: inline-block;
+            margin: 24px auto 0 auto;
+            background: #23272F;
+            color: #4169E1;
+            border: 2px solid #4169E1;
+            border-radius: 7px;
+            padding: 10px 28px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: background 0.2s, color 0.2s;
+        }
+        .back-btn:hover {
+            background: #4169E1;
+            color: #fff;
+        }
+        @media (max-width: 500px) {
+            .memory-game-container { max-width: 99vw; padding: 12px 2vw; }
+            #memory-game-board { grid-template-columns: repeat(4, 18vw); }
+            .memory-card { width: 18vw; height: 18vw; font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">&larr; Back to Portfolio</a>
+    <div class="memory-game-container">
+        <div class="memory-game-title">🧠 Memory Game</div>
+        <div id="memory-game-board"></div>
+        <div id="memory-game-status"></div>
+        <button id="memory-game-restart">Restart</button>
+    </div>
+    <script>
+    // Memory Game Logic
+    (function() {
+        const emojis = ['🍕','🚀','🎸','🐱','🌟','🎲','🎧','🧩'];
+        let board = [];
+        let flipped = [];
+        let matched = [];
+        let lock = false;
+        let moves = 0;
+        const boardDiv = document.getElementById('memory-game-board');
+        const statusDiv = document.getElementById('memory-game-status');
+        const restartBtn = document.getElementById('memory-game-restart');
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initGame() {
+            board = shuffle([...emojis, ...emojis]);
+            flipped = [];
+            matched = [];
+            moves = 0;
+            lock = false;
+            render();
+            statusDiv.textContent = 'Find all the pairs!';
+        }
+
+        function render() {
+            boardDiv.innerHTML = '';
+            board.forEach((emoji, idx) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                if (flipped.includes(idx) || matched.includes(idx)) {
+                    card.classList.add('flipped');
+                    card.textContent = emoji;
+                } else {
+                    card.textContent = '';
+                }
+                if (matched.includes(idx)) card.classList.add('matched');
+                card.addEventListener('click', () => onCardClick(idx));
+                boardDiv.appendChild(card);
+            });
+        }
+
+        function onCardClick(idx) {
+            if (lock || flipped.includes(idx) || matched.includes(idx)) return;
+            flipped.push(idx);
+            render();
+            if (flipped.length === 2) {
+                moves++;
+                lock = true;
+                setTimeout(() => {
+                    const [i, j] = flipped;
+                    if (board[i] === board[j]) {
+                        matched.push(i, j);
+                        if (matched.length === board.length) {
+                            statusDiv.textContent = `🎉 You won in ${moves} moves!`;
+                        } else {
+                            statusDiv.textContent = 'Match!';
+                        }
+                    } else {
+                        statusDiv.textContent = 'Try again!';
+                    }
+                    flipped = [];
+                    render();
+                    lock = false;
+                }, 800);
+            }
+        }
+
+        restartBtn.addEventListener('click', initGame);
+        initGame();
+    })();
+    </script>
+</body>
+</html> 

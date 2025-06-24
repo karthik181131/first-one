@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4; /* Light gray background */
+    color: #333; /* Dark text color */
+}
+
+#contact {
+    padding: 60px 20px; /* Vertical padding for top and bottom */
+    background-color: #ffffff; /* White background for the contact section */
+    text-align: center; /* Center the text */
+}
+
+.container {
+    max-width: 1200px; /* Maximum width for larger screens */
+    margin: 0 auto; /* Center the container */
+}
+
+h2 {
+    font-size: 2.5em; /* Large heading size */
+    color: #007acc; /* Blue color for headings */
+    margin-bottom: 20px; /* Space below the heading */
+}
+
+p {
+    font-size: 1.2em; /* Slightly larger text for paragraphs */
+    color: #555; /* Medium gray text for readability */
+}
+
+.button {
+    display: inline-block; /* Align button inline */
+    padding: 10px 20px; /* Padding inside button */
+    font-size: 16px; /* Font size of button text */
+    color: white; /* White text color */
+    background-color: #007acc; /* Primary button color */
+    text-decoration: none; /* Remove underline from link */
+    border-radius: 5px; /* Rounded corners */
+    margin: 20px 0; /* Margin above and below the button */
+    vertical-align: middle; /* Align button vertically with text */
+    transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+.button:hover {
+    background-color: #005f99; /* Darker blue on hover */
+}
+
+.icon {
+    width: 50px; /* Size of icons */
+    height: 50px; /* Size of icons */
+    vertical-align: middle; /* Align icon with text */
+    margin-right: 10px; /* Space between icon and text */
+}
+
+.social-icons {
+    margin-top: 20px; /* Space above social icons */
+}
+
+.social-icon {
+    display: inline-block; /* Align icons inline */
+    margin: 0 15px; /* Space between social icons */
+}
+
+.social-icon img {
+    width: 50px; /* Size of social media icons */
+    height: 50px; /* Size of social media icons */
+    vertical-align: middle; /* Align icon with text */
+    transition: opacity 0.3s; /* Smooth opacity transition */
+}
+
+.social-icon img:hover {
+    opacity: 0.7; /* Change opacity on hover for social icons */
+}
+
+.contact-info {
+    margin-top: 20px; /* Space above contact info section */
+    font-size: 1.1em; /* Slightly smaller text for contact info */
+    color: #333; /* Dark text color for readability */
+}
+
+.back-button {
+    display: inline-block; /* Align back button inline */
+    padding: 10px 20px; /* Padding inside button */
+    font-size: 16px; /* Font size of button text */
+    color: white; /* White text color */
+    background-color: #007acc; /* Primary button color */
+    text-decoration: none; /* Remove underline from link */
+    border-radius: 5px; /* Rounded corners */
+    margin-top: 40px; /* Space above back button */
+    transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+.back-button:hover {
+    background-color: #005f99; /* Darker blue on hover */
+}

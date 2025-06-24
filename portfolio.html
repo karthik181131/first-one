@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Karthik</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #22316C;
+            color: #23272F;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul {
+            background: #181A20;
+            border-radius: 10px;
+            padding: 12px 0;
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+            border-bottom: 1px solid #23272F;
+        }
+        nav ul li a {
+            color: #4169E1;
+            font-weight: 500;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+        }
+        nav ul li a:hover {
+            color: #FFFFFF;
+        }
+        section {
+            background: #23272F;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(65,105,225,0.10);
+            margin: 32px auto;
+            padding: 32px 18px;
+            max-width: 900px;
+            position: relative;
+        }
+        h2 {
+            color: #4169E1;
+            letter-spacing: 1px;
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 18px;
+            position: relative;
+        }
+        h2::after {
+            content: '';
+            display: block;
+            margin: 12px auto 0 auto;
+            width: 60px;
+            height: 5px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #4169E1 0%, #6CA0FF 100%);
+        }
+        h3 {
+            color: #4169E1;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .card-section, .skills-container, .certificates-container, .platforms-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+            background: none;
+            margin-top: 18px;
+        }
+        .card, .skill-box, .certificate-box, .platform-link {
+            background: #FFFFFF;
+            color: #23272F;
+            border: 2px solid #4169E1;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(65,105,225,0.10);
+            padding: 22px 18px 14px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            min-width: 220px;
+            max-width: 340px;
+            transition: box-shadow 0.25s, border-color 0.25s, transform 0.2s;
+        }
+        .card:hover, .skill-box:hover, .certificate-box:hover, .platform-link:hover {
+            box-shadow: 0 6px 32px rgba(65,105,225,0.18), 0 2px 12px rgba(0,0,0,0.10);
+            border-color: #2746a8;
+            transform: scale(1.04) translateY(-4px);
+        }
+        .card h3, .skill-box p, .certificate-box h3 {
+            color: #4169E1;
+            font-weight: 600;
+        }
+        .card p, .skill-box p, .certificate-box p {
+            color: #23272F;
+        }
+        .certificate-accent {
+            height: 8px;
+            width: 100%;
+            background: linear-gradient(90deg, #4169E1 0%, #23272F 100%);
+            margin-bottom: 12px;
+            border-radius: 4px;
+        }
+        .certificate-box img, .skill-box img, .platform-link img {
+            width: 54px;
+            height: 54px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background: #F5F7FA;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            object-fit: contain;
+        }
+        .platform-link {
+            align-items: center;
+            min-width: 120px;
+            max-width: 150px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.08rem;
+        }
+        .platform-link span {
+            color: #4169E1;
+            font-weight: 600;
+        }
+        @media (max-width: 600px) {
+            .card-section, .skills-container, .certificates-container, .platforms-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 18px;
+            }
+            .card, .skill-box, .certificate-box, .platform-link {
+                width: 90vw;
+                min-width: 0;
+                max-width: 95vw;
+            }
+        }
+        .lightbox-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(34, 49, 108, 0.85);
+            justify-content: center;
+            align-items: center;
+        }
+        .lightbox-modal.active {
+            display: flex;
+        }
+        .lightbox-modal img {
+            max-width: 90vw;
+            max-height: 80vh;
+            border-radius: 12px;
+            box-shadow: 0 4px 32px rgba(65,105,225,0.25);
+            background: #fff;
+        }
+        .lightbox-modal .close-btn {
+            position: absolute;
+            top: 32px;
+            right: 48px;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 10001;
+            transition: color 0.2s;
+        }
+        .lightbox-modal .close-btn:hover {
+            color: #4169E1;
+        }
+        .certificate-box a.lightbox-link {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+            color: inherit;
+        }
+        .certificate-box:hover {
+            cursor: pointer;
+        }
+        .skill-box {
+            background: #FFFFFF;
+            border: 2px solid #4169E1;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(65,105,225,0.10);
+            padding: 16px 10px 10px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100px;
+            height: 120px;
+            margin: 0 14px 14px 0;
+            transition: box-shadow 0.25s, border-color 0.25s, transform 0.2s;
+            justify-content: flex-start;
+        }
+        .skill-box img {
+            width: 54px;
+            height: 54px;
+            margin: 0 0 10px 0;
+            border-radius: 8px;
+            background: #F5F7FA;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            object-fit: contain;
+            display: block;
+        }
+        .skill-name {
+            color: #4169E1;
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 2px;
+            letter-spacing: 0.2px;
+            line-height: 1.2;
+        }
+        .skills-container {
+            gap: 18px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+            justify-content: center;
+            background: none;
+            display: flex;
+        }
+        @media (max-width: 600px) {
+            .skills-container {
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+            }
+            .skill-box {
+                width: 68px;
+                height: 88px;
+                padding: 10px 4px 8px 4px;
+                margin: 0 4px 10px 0;
+            }
+            .skill-box img {
+                width: 32px;
+                height: 32px;
+                margin-bottom: 6px;
+            }
+            .skill-name {
+                font-size: 0.93rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav>
+    <ul>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#certificates">Certificates</a></li>
+    </ul>
+</nav>
+
+<section id="education">
+    <h2>Education</h2>
+    <div class="card-section">
+        <div class="card">
+            <div style="height:6px;width:100%;background:linear-gradient(90deg,#4169E1,#23272F);border-radius:6px 6px 0 0;margin-bottom:10px;"></div>
+            <h3 style="margin-top:0;">B.Tech in Computer Science</h3>
+            <p style="color:#4169E1;font-size:1.05rem;margin-bottom:4px;">Artificial Intelligence & Data Science</p>
+            <p style="margin-bottom:4px;">GMR Institute of Technology</p>
+            <p style="font-size:0.98rem;">2022 - 2026</p>
+        </div>
+        <div class="card">
+            <div style="height:6px;width:100%;background:linear-gradient(90deg,#4169E1,#23272F);border-radius:6px 6px 0 0;margin-bottom:10px;"></div>
+            <h3 style="margin-top:0;">Intermediate</h3>
+            <p style="color:#4169E1;font-size:1.05rem;margin-bottom:4px;">Narayana Jr College</p>
+            <p style="margin-bottom:4px;">Score: <span style="color:#4169E1;">97%</span></p>
+            <p style="font-size:0.98rem;">2020 - 2022</p>
+        </div>
+        <div class="card">
+            <div style="height:6px;width:100%;background:linear-gradient(90deg,#4169E1,#23272F);border-radius:6px 6px 0 0;margin-bottom:10px;"></div>
+            <h3 style="margin-top:0;">SSC</h3>
+            <p style="color:#4169E1;font-size:1.05rem;margin-bottom:4px;">ST.ANN'S E.M School</p>
+            <p style="margin-bottom:4px;">Score: <span style="color:#4169E1;">98%</span></p>
+            <p style="font-size:0.98rem;">2019 - 2020</p>
+        </div>
+    </div>
+</section>
+
+<section id="skills">
+    <h2>Skills</h2>
+    <div class="skills-container">
+        <div class="skill-box">
+            <img src="python.jpeg" alt="Python">
+            <div class="skill-name">Python</div>
+        </div>
+        <div class="skill-box">
+            <img src="ml.png" alt="Machine Learning">
+            <div class="skill-name">Machine Learning</div>
+        </div>
+        <div class="skill-box">
+            <img src="dl.jpeg" alt="Deep Learning">
+            <div class="skill-name">Deep Learning</div>
+        </div>
+        <div class="skill-box">
+            <img src="css.png" alt="CSS">
+            <div class="skill-name">CSS</div>
+        </div>
+        <div class="skill-box">
+            <img src="html.png" alt="HTML">
+            <div class="skill-name">HTML</div>
+        </div>
+        <div class="skill-box">
+            <img src="JS.jpeg" alt="JavaScript">
+            <div class="skill-name">JavaScript</div>
+        </div>
+    </div>
+</section>
+
+<section id="projects">
+    <h2>Projects</h2>
+    <div class="card-section">
+        <div class="card">
+            <div style="height:6px;width:100%;background:linear-gradient(90deg,#4169E1,#23272F);border-radius:6px 6px 0 0;margin-bottom:10px;"></div>
+            <h3 style="margin-top:0;">Image Classification using CNN</h3>
+            <p style="color:#4169E1;font-size:1.05rem;margin-bottom:4px;">Deep Learning Project</p>
+            <p style="font-size:0.98rem;">A deep learning project for classifying images of fruits and vegetables. Built with Convolutional Neural Networks (CNNs) for high accuracy.</p>
+        </div>
+        <div class="card">
+            <div style="height:6px;width:100%;background:linear-gradient(90deg,#4169E1,#23272F);border-radius:6px 6px 0 0;margin-bottom:10px;"></div>
+            <h3 style="margin-top:0;">Online Examination System</h3>
+            <p style="color:#4169E1;font-size:1.05rem;margin-bottom:4px;">Web Development Project</p>
+            <p style="font-size:0.98rem;">Developed a static website for an online examination system, featuring user-friendly design and secure exam management.</p>
+        </div>
+    </div>
+</section>
+
+<section id="certificates">
+    <h2>Certificates</h2>
+    <div class="certificates-container">
+        <div class="certificate-box">
+            <a href="certificate 1.jpg" class="lightbox-link">
+                <div class="certificate-accent"></div>
+                <img src="certificate 1.jpg" alt="Machine Learning Certificate">
+                <h3>Machine Learning</h3>
+                <p>Issued by Technook in collaboration with IIT Roorkee</p>
+            </a>
+        </div>
+        <div class="certificate-box">
+            <a href="certificate 2.jpg" class="lightbox-link">
+                <div class="certificate-accent"></div>
+                <img src="certificate 2.jpg" alt="Data Structures Through Java Certificate">
+                <h3>Data Structures Through Java</h3>
+                <p>Issued by NPTEL</p>
+            </a>
+        </div>
+        <div class="certificate-box">
+            <a href="certificate 3.jpg" class="lightbox-link">
+                <div class="certificate-accent"></div>
+                <img src="certificate 3.jpg" alt="Programming in Python Certificate">
+                <h3>Programming in Python</h3>
+                <p>Issued by Coursera</p>
+            </a>
+        </div>
+        <div class="certificate-box">
+            <a href="certificate 4.jpg" class="lightbox-link">
+                <div class="certificate-accent"></div>
+                <img src="certificate 4.jpg" alt="Introduction to IoT Certificate">
+                <h3>Introduction to IoT</h3>
+                <p>Issued by NPTEL</p>
+            </a>
+        </div>
+        <div class="certificate-box">
+            <a href="certificate 5.jpg" class="lightbox-link">
+                <div class="certificate-accent"></div>
+                <img src="certificate 5.jpg" alt="Community Project Certificate">
+                <h3>Community Project</h3>
+                <p>Completed at Razam.</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section id="platforms">
+    <h2>Platforms</h2>
+    <div class="platforms-container">
+        <a href="https://www.codechef.com/users/karthik1_4_3_2" target="_blank" class="platform-link">
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/codechef.svg" alt="CodeChef" />
+            <span>CodeChef</span>
+        </a>
+        <a href="https://leetcode.com/u/karthik1_432/" target="_blank" class="platform-link">
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/leetcode.svg" alt="LeetCode" />
+            <span>LeetCode</span>
+        </a>
+        <a href="https://www.geeksforgeeks.org/user/karthik9gc6w/" target="_blank" class="platform-link">
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/geeksforgeeks.svg" alt="GeeksforGeeks" />
+            <span>GeeksforGeeks</span>
+        </a>
+        <a href="https://github.com/karthik181131" target="_blank" class="platform-link">
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub" />
+            <span>GitHub</span>
+        </a>
+    </div>
+</section>
+
+<!-- Lightbox Modal for Certificates -->
+<div class="lightbox-modal" id="lightboxModal">
+    <span class="close-btn" id="lightboxClose">&times;</span>
+    <img src="" alt="Certificate Preview" id="lightboxImg">
+</div>
+
+<!-- Back Button -->
+<div style="text-align:center; margin: 32px 0 16px 0;">
+    <a href="index.html" style="display:inline-block; background:#4169E1; color:#fff; border:none; border-radius:6px; padding:12px 32px; font-weight:600; font-size:1.1rem; text-decoration:none; box-shadow:0 2px 8px rgba(65,105,225,0.10);">Back</a>
+</div>
+
+<script>
+// Lightbox functionality for certificates
+const lightboxLinks = document.querySelectorAll('.lightbox-link');
+const lightboxModal = document.getElementById('lightboxModal');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxClose = document.getElementById('lightboxClose');
+
+lightboxLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const imgSrc = this.getAttribute('href');
+        lightboxImg.src = imgSrc;
+        lightboxModal.classList.add('active');
+    });
+});
+lightboxClose.addEventListener('click', function() {
+    lightboxModal.classList.remove('active');
+    lightboxImg.src = '';
+});
+lightboxModal.addEventListener('click', function(e) {
+    if (e.target === lightboxModal) {
+        lightboxModal.classList.remove('active');
+        lightboxImg.src = '';
+    }
+});
+</script>
+
+</body>
+</html>

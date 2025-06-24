@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Examination System - Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #181A20;
+            color: #E0E1E6;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .exam-container {
+            margin: 48px auto 0 auto;
+            background: #23272F;
+            border-radius: 18px;
+            box-shadow: 0 2px 16px rgba(65,105,225,0.10);
+            padding: 32px 20px 24px 20px;
+            max-width: 420px;
+            width: 98vw;
+            position: relative;
+            z-index: 1;
+        }
+        .exam-title {
+            color: #4169E1;
+            text-align: center;
+            margin-bottom: 18px;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .question {
+            margin-bottom: 18px;
+        }
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option {
+            background: #181A20;
+            border: 2px solid #4169E1;
+            border-radius: 7px;
+            color: #E0E1E6;
+            padding: 10px 16px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            text-align: left;
+        }
+        .option.selected {
+            background: #4169E1;
+            color: #fff;
+            border-color: #fff;
+        }
+        .option.correct {
+            background: #28a745;
+            color: #fff;
+            border-color: #fff;
+        }
+        .option.incorrect {
+            background: #dc3545;
+            color: #fff;
+            border-color: #fff;
+        }
+        #submit-btn, #restart-btn {
+            display: block;
+            margin: 24px auto 0 auto;
+            background: #4169E1;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            padding: 10px 28px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(65,105,225,0.10);
+            transition: background 0.2s;
+        }
+        #submit-btn:hover, #restart-btn:hover {
+            background: #2746a8;
+        }
+        #result {
+            text-align: center;
+            color: #4169E1;
+            font-size: 1.2rem;
+            margin-top: 18px;
+            font-weight: 600;
+        }
+        .back-btn {
+            display: inline-block;
+            margin: 24px auto 0 auto;
+            background: #23272F;
+            color: #4169E1;
+            border: 2px solid #4169E1;
+            border-radius: 7px;
+            padding: 10px 28px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: background 0.2s, color 0.2s;
+        }
+        .back-btn:hover {
+            background: #4169E1;
+            color: #fff;
+        }
+        @media (max-width: 500px) {
+            .exam-container { max-width: 99vw; padding: 12px 2vw; }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">&larr; Back to Portfolio</a>
+    <div class="exam-container">
+        <div class="exam-title">📝 Online Examination System</div>
+        <form id="exam-form">
+            <div id="questions"></div>
+            <button type="submit" id="submit-btn">Submit</button>
+            <button type="button" id="restart-btn" style="display:none;">Restart</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script>
+    // Exam Questions
+    const questions = [
+        {
+            text: "Which language is primarily used for web development?",
+            options: ["Python", "JavaScript", "C++", "Java"],
+            answer: 1
+        },
+        {
+            text: "What does CSS stand for?",
+            options: ["Computer Style Sheets", "Creative Style System", "Cascading Style Sheets", "Colorful Style Syntax"],
+            answer: 2
+        },
+        {
+            text: "Which HTML tag is used to create a hyperlink?",
+            options: ["<a>", "<link>", "<href>", "<hyper>"],
+            answer: 0
+        },
+        {
+            text: "Which of the following is a JavaScript framework?",
+            options: ["Django", "Flask", "React", "Laravel"],
+            answer: 2
+        },
+        {
+            text: "What is the value of 2 + '2' in JavaScript?",
+            options: ["4", "22", "'4'", "undefined"],
+            answer: 1
+        }
+    ];
+
+    let selected = Array(questions.length).fill(null);
+    let submitted = false;
+
+    const questionsDiv = document.getElementById('questions');
+    const resultDiv = document.getElementById('result');
+    const submitBtn = document.getElementById('submit-btn');
+    const restartBtn = document.getElementById('restart-btn');
+
+    function renderQuestions() {
+        questionsDiv.innerHTML = '';
+        questions.forEach((q, i) => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question';
+            const qText = document.createElement('div');
+            qText.className = 'question-text';
+            qText.textContent = `${i + 1}. ${q.text}`;
+            qDiv.appendChild(qText);
+            const optsDiv = document.createElement('div');
+            optsDiv.className = 'options';
+            q.options.forEach((opt, j) => {
+                const optBtn = document.createElement('button');
+                optBtn.type = 'button';
+                optBtn.className = 'option';
+                optBtn.textContent = opt;
+                if (selected[i] === j) optBtn.classList.add('selected');
+                if (submitted) {
+                    if (j === q.answer) optBtn.classList.add('correct');
+                    else if (selected[i] === j && j !== q.answer) optBtn.classList.add('incorrect');
+                }
+                optBtn.onclick = () => {
+                    if (submitted) return;
+                    selected[i] = j;
+                    renderQuestions();
+                };
+                optsDiv.appendChild(optBtn);
+            });
+            qDiv.appendChild(optsDiv);
+            questionsDiv.appendChild(qDiv);
+        });
+    }
+
+    document.getElementById('exam-form').onsubmit = function(e) {
+        e.preventDefault();
+        if (submitted) return;
+        if (selected.includes(null)) {
+            resultDiv.textContent = 'Please answer all questions!';
+            return;
+        }
+        submitted = true;
+        let score = 0;
+        questions.forEach((q, i) => {
+            if (selected[i] === q.answer) score++;
+        });
+        renderQuestions();
+        resultDiv.textContent = `You scored ${score} out of ${questions.length}!`;
+        submitBtn.style.display = 'none';
+        restartBtn.style.display = 'block';
+    };
+
+    restartBtn.onclick = function() {
+        selected = Array(questions.length).fill(null);
+        submitted = false;
+        resultDiv.textContent = '';
+        submitBtn.style.display = 'block';
+        restartBtn.style.display = 'none';
+        renderQuestions();
+    };
+
+    renderQuestions();
+    </script>
+</body>
+</html> 
